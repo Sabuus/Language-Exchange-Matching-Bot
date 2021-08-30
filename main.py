@@ -1,4 +1,3 @@
-from datetime import timedelta
 import discord
 import re
 import psycopg2
@@ -147,7 +146,7 @@ def showAllUsers():
     exitConnection(con, cur)
 def showChannels(g):
     s = ""
-    if v in g.voice_channels:
+    for v in g.voice_channels:
         s += (v.name + "\n")
     return s
 @client.event
@@ -178,7 +177,7 @@ async def on_message(message):
                 mes = m[2] + " Your language exchange starts at " + formString(m[3][0]) + " , and ends at " + formString(m[3][1]) + " on " + m[3][2]
                 await message.channel.send(mes)
                 guild = client.get_guild(message.guild.id)
-                await message.channel.send(showChannels())
+                await message.channel.send(showChannels(guild) + "are voice channels that you can use.")
         else:
             await message.channel.send('Wrong Command. Please check your command)')
     elif message.content.startswith('/cancel'):
@@ -189,7 +188,8 @@ async def on_message(message):
         await message.channel.send('Initialized Database')
     elif message.content.startswith('/users'):
         await message.channel.send(showAllUsers())
-    elif message.content.startswith('/cuhannels'):
-        await message.channel.send(showChannels())
+    elif message.content.startswith('/channels'):
+        guild = client.get_guild(message.guild.id)
+        await message.channel.send(showChannels(guild) + "are voice channels that you can use.")
 # Botの起動とDiscordサーバーへの接続
 client.run(TOKEN)
