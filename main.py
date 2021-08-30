@@ -145,6 +145,11 @@ def showAllUsers():
     for r in rows:
         print(r)
     exitConnection(con, cur)
+def showChannels(g):
+    s = ""
+    if v in g.voice_channels:
+        s += (v.name + "\n")
+    return s
 @client.event
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
@@ -172,6 +177,8 @@ async def on_message(message):
                 await message.channel.send(mes)
                 mes = m[2] + " Your language exchange starts at " + formString(m[3][0]) + " , and ends at " + formString(m[3][1]) + " on " + m[3][2]
                 await message.channel.send(mes)
+                guild = client.get_guild(message.guild.id)
+                await message.channel.send(showChannels())
         else:
             await message.channel.send('Wrong Command. Please check your command)')
     elif message.content.startswith('/cancel'):
@@ -182,5 +189,7 @@ async def on_message(message):
         await message.channel.send('Initialized Database')
     elif message.content.startswith('/showUsers'):
         await message.channel.send(showAllUsers())
+    elif message.content.startswith('/showChannels'):
+        await message.channel.send(showChannels())
 # Botの起動とDiscordサーバーへの接続
 client.run(TOKEN)
