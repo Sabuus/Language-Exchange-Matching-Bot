@@ -187,9 +187,9 @@ async def on_message(message):
     elif message.content.startswith('/init'):
         init()
         await message.channel.send('Initialized Database')
-    elif message.content.startswith('/showUsers'):
+    elif message.content.startswith('/users'):
         await message.channel.send(showAllUsers())
-    elif message.content.startswith('/showChannels'):
+    elif message.content.startswith('/cuhannels'):
         await message.channel.send(showChannels())
 # Botの起動とDiscordサーバーへの接続
 client.run(TOKEN)
