@@ -66,6 +66,7 @@ def checkTime(startTime, endTime, secondStartTime, secondEndTime):
         return inter[0], inter[-1] + 1
 def register(s):
     dt = s[2]
+    dt = formStringMonth(dt)
     start, end = re.split('[-ー]', s[3])
     x = timeEncoder(start, s[4], dt)
     y = timeEncoder(end, s[4], dt)
@@ -129,13 +130,20 @@ def cancel(name, id):
             return "You can't cancel other's reservation"
     except TypeError:
         return "You don't have any reservation"
-def formString(s):
-    st = re.split(':', s)
-    if int(st[0]) < 10:
+def formStringTime(s):
+    st = re.split('[:：]', s)
+    if (int(st[0]) < 10 and not("0" in st[0])) or st[0] == "0":
         st[0] = '0' + st[0]
-    if int(st[1]) < 10:
+    if (int(st[1]) < 10 and not("0" in st[1])) or st[1] == "0":
         st[1] = '0' + st[1]
-    return st[0] + ':' + st[1] 
+    return st[0] + ':' + st[1]
+def formStringMonth(s):
+    st = re.split('[/／]', s)
+    if (int(st[0]) < 10 and not("0" in st[0])) or st[0] == "0":
+        st[0] = '0' + st[0]
+    if (int(st[1]) < 10 and not("0" in st[1]))  or st[1] == "0":
+        st[1] = '0' + st[1]
+    return st[0] + '/' + st[1] 
 def showAllUsers():
     sql = "SELECT * FROM USERS"
     con, cur = executioner(sql)
@@ -172,9 +180,9 @@ async def on_message(message):
                 await message.channel.send(m)
             else:
                 print(m)
-                mes = m[0] + " Your language exchange starts at " + formString(m[1][0]) + " , and ends at " + formString(m[1][1]) + " on " + m[1][2]
+                mes = m[0] + " Your language exchange starts at " + formStringTime(m[1][0]) + " , and ends at " + formStringTime(m[1][1]) + " on " + m[1][2]
                 await message.channel.send(mes)
-                mes = m[2] + " Your language exchange starts at " + formString(m[3][0]) + " , and ends at " + formString(m[3][1]) + " on " + m[3][2]
+                mes = m[2] + " Your language exchange starts at " + formStringTime(m[3][0]) + " , and ends at " + formStringTime(m[3][1]) + " on " + m[3][2]
                 await message.channel.send(mes)
                 guild = client.get_guild(message.guild.id)
                 await message.channel.send(showChannels(guild) + "are voice channels that you can use.")
