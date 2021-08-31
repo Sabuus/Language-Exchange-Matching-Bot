@@ -1,12 +1,12 @@
 import discord
 import re
 import psycopg2
-TOKEN = 'ODgxNDMxNTY5NTQ4NTgyOTEz.YSsvHg.8P8t-ws9Zb7oZFfsS-y_zEPKybM'
+TOKEN = ''
 # 接続に必要なオブジェクトを生成
 
 client = discord.Client()
 def connect():
-    con = psycopg2.connect("postgres://ogscmjrvhrudqo:8b640667ddf8d36c3913cd8a6e53d817c248a54aa2d65174ed5f73c9f9a22bcb@ec2-54-147-93-73.compute-1.amazonaws.com:5432/d8l3no5ghmat9c", sslmode='require')
+    con = psycopg2.connect("")
     return con
 def exitConnection(con, cur):
     cur.close()
