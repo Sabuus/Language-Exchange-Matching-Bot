@@ -9,7 +9,6 @@ class UserMeetTime:
         self.user = userInput.author.mention
         self.isValidInput = True
         self.languageSelected = ""
-        self.desiredDate = datetime.now()
         self.startTime = datetime.now()
         self.endTime = datetime.now()
         self.timezone = ""
@@ -18,6 +17,7 @@ class UserMeetTime:
         content = re.split(' ', userInput.content)
         self.checkString(content)
 
+    # Refactor this to be more manageable
     def checkString(self, inputStringArray):
         if inputStringArray[1] in validLanguages:
             self.languageSelected = inputStringArray[1]
@@ -30,20 +30,20 @@ class UserMeetTime:
 
             baseTime = datetime.strptime(date, '%m/%d')
 
-            self.desiredTime = baseTime.replace(year=datetime.now().year)
+            baseTime = baseTime.replace(year=datetime.now().year)
 
             inputStringArray[3].replace('ー', '-')
 
             times = inputStringArray[3].split('-')
 
-            self.startTime = self.generateTimeAttribute(times[0], self.desiredTime)
-            self.endTime = self.generateTimeAttribute(times[1], self.desiredTime)
+            self.startTime = self.generateTimeAttribute(times[0], baseTime)
+            self.endTime = self.generateTimeAttribute(times[1], baseTime)
 
             # Need to fix this, timezones require a specific location for tz module
             self.timezone = inputStringArray[4]
             # self.timezone = tz.gettz(inputStringArray[4])
             # self.desiredTime.astimezone(self.timezone)
-        except ValueError:
+        except TypeError:
             self.isValidInput = False
 
     def generateTimeAttribute(self, timeStr, dateToReplaceWith):
