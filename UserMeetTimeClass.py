@@ -12,6 +12,7 @@ class UserMeetTime:
         self.startTime = datetime.now()
         self.endTime = datetime.now()
         self.timezone = ""
+        self.isMatched = False
 
 
         content = re.split(' ', userInput.content)

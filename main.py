@@ -54,18 +54,20 @@ async def on_ready():
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
+    dbConn = DatabaseWrapper()
     # メッセージ送信者がBotだった場合は無視する
     if message.author.bot:
         return
+    # May reduce logic held within the if-statement, very big and can't be modified easily
     if message.content.startswith('/match'):
         # /match jp(en) 09/22 21:00-22:00 9
         userInput = UserMeetTime(message)
         if userInput.isValidInput:
-            dbConn = DatabaseWrapper()
-            dbConn.register(userInput)
-            # id = checkID(message.author.mention)
-            # await message.channel.send('Registered ' + message.author.display_name + " Your ID is " + str(id))
-    #         m = match(id)
+            userData = dbConn.register(userInput)
+            await message.channel.send('Registered ' + message.author.display_name + " Your ID is " + str(userData[0]))
+            matchingUser = dbConn.matchUsers(userData)
+            print(matchingUser)
+            
     #         if "No one" in m:
     #             await message.channel.send(m)
     #         else:
@@ -81,14 +83,14 @@ async def on_message(message):
     # elif message.content.startswith('/cancel'):
     #     id = re.split(' ', message.content)[1]
     #     await message.channel.send(cancel(message.author.mention, id))
-    # elif message.content.startswith('/init'):
-    #     init()
-    #     await message.channel.send('Initialized Database')
-    # elif message.content.startswith('/users'):
-    #     await message.channel.send(showAllUsers())
-    # elif message.content.startswith('/channels'):
-    #     guild = client.get_guild(message.guild.id)
-    #     await message.channel.send(showChannels(guild) + "are voice channels that you can use.")
+    elif message.content.startswith('/init'):
+        dbConn.init()
+        await message.channel.send('Initialized Database')
+    elif message.content.startswith('/users'):
+        await message.channel.send(dbConn.showAllUsers())
+    elif message.content.startswith('/channels'):
+        guild = client.get_guild(message.guild.id)
+        await message.channel.send(dbConn.showChannels(guild) + "are voice channels that you can use.")
 
 
 # Botの起動とDiscordサーバーへの接続
